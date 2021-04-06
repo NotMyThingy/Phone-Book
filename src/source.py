@@ -18,6 +18,11 @@ class Puhelinluettelo:
 class PuhelinluetteloSovellus:
     def __init__(self) -> None:
         self.__luettelo = Puhelinluettelo()
+        self.__tiedosto = Tiedostonkasittelija('luettelo.txt')
+
+        for nimi, numerot in self.__tiedosto.lataa().items():
+            for numero in numerot:
+                self.__luettelo.lisaa_numero(nimi, numero)
 
     def ohje(self):
         print('komennot:')
@@ -72,5 +77,5 @@ class Tiedostonkasittelija:
 
 # testikoodia
 if __name__ == '__main__':
-    t = Tiedostonkasittelija("luettelo.txt")
-    print(t.lataa())
+    sovellus = PuhelinluetteloSovellus()
+    sovellus.suorita()
