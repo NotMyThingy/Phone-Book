@@ -4,11 +4,11 @@ class Puhelinluettelo:
 
     def lisaa_numero(self, nimi: str, numero: str):
         if nimi not in self.__henkilot:
-            self.__henkilot[nimi] = []
+            self.__henkilot[nimi] = Henkilo(nimi)
 
-        self.__henkilot[nimi].append(numero)
+        self.__henkilot[nimi].lisaa_numero(numero)
 
-    def hae_numerot(self, nimi: str):
+    def tiedot(self, nimi: str):
         if nimi not in self.__henkilot:
             return None
 
@@ -23,6 +23,61 @@ class Puhelinluettelo:
 
     def kaikki_tiedot(self):
         return self.__henkilot
+
+
+class Tiedostonkasittelija:
+    def __init__(self, tiedosto: str) -> None:
+        self.__tiedosto = tiedosto
+
+    def lataa(self):
+        nimet = {}
+        with open(self.__tiedosto) as t:
+            for rivi in t:
+                osat = rivi.strip().split(';')
+                nimi, *numerot = osat
+                nimet[nimi] = numerot
+
+        return nimet
+
+    def talleta(self, luettelo: dict):
+        with open(self.__tiedosto, 'w') as t:
+            for nimi, numerot in luettelo.items():
+                rivi = [nimi] + numerot
+                t.write(';'.join(rivi) + '\n')
+
+
+class Henkilo:
+    def __init__(self, nimi: str) -> None:
+        self.__nimi = nimi
+        self.__numerot = []
+        self.__osoite = ''
+
+    def nimi(self):
+        return self.__nimi
+
+    def numerot(self):
+        return self.__numerot
+
+    def osoite(self):
+        if not self.__osoite:
+            return None
+
+        return self.__osoite
+
+    def lisaa_numero(self, numero: str):
+        if not numero:
+            return
+
+        self.__numerot.append(numero)
+
+    def lisaa_osoite(self, osoite: str):
+        if not osoite:
+            return
+
+        self.__osoite = osoite
+
+    def __str__(self) -> str:
+        return f'{self.__nimi}\n  {", ".join(self.__numerot)}\n  {self.osoite()}'
 
 
 class PuhelinluetteloSovellus:
@@ -49,21 +104,21 @@ class PuhelinluetteloSovellus:
 
     def haku(self):
         nimi = input('nimi: ')
-        numerot = self.__luettelo.hae_numerot(nimi)
-        if numerot == None:
+        haettu = self.__luettelo.tiedot(nimi)
+        if haettu == None:
             print('numero ei tiedossa')
             return
 
-        for numero in numerot:
+        for numero in haettu.numerot():
             print(numero)
 
-    def haku_numerolla(self):
-        numero = input('numero: ')
-        nimi = self.__luettelo.hae_numerolla(numero)
-        if nimi == None:
-            print('tuntematon numero')
-        else:
-            print(nimi)
+    # def haku_numerolla(self):
+    #     numero = input('numero: ')
+    #     nimi = self.__luettelo.hae_numerolla(numero)
+    #     if nimi == None:
+    #         print('tuntematon numero')
+    #     else:
+    #         print(nimi)
 
     def lopetus(self):
         self.__tiedosto.talleta(self.__luettelo.kaikki_tiedot())
@@ -85,27 +140,6 @@ class PuhelinluetteloSovellus:
                 self.haku_numerolla()
             else:
                 self.ohje()
-
-
-class Tiedostonkasittelija:
-    def __init__(self, tiedosto: str) -> None:
-        self.__tiedosto = tiedosto
-
-    def lataa(self):
-        nimet = {}
-        with open(self.__tiedosto) as t:
-            for rivi in t:
-                osat = rivi.strip().split(';')
-                nimi, *numerot = osat
-                nimet[nimi] = numerot
-
-        return nimet
-
-    def talleta(self, luettelo: dict):
-        with open(self.__tiedosto, 'w') as t:
-            for nimi, numerot in luettelo.items():
-                rivi = [nimi] + numerot
-                t.write(';'.join(rivi) + '\n')
 
 
 # testikoodia
