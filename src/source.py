@@ -14,6 +14,9 @@ class Puhelinluettelo:
 
         return self.__henkilot[nimi]
 
+    def kaikki_tiedot(self):
+        return self.__henkilot
+
 
 class PuhelinluetteloSovellus:
     def __init__(self) -> None:
@@ -46,12 +49,16 @@ class PuhelinluetteloSovellus:
         for numero in numerot:
             print(numero)
 
+    def lopetus(self):
+        self.__tiedosto.talleta(self.__luettelo.kaikki_tiedot())
+
     def suorita(self):
         self.ohje()
         while True:
             print()
             komento = input('komento: ')
             if komento == '0':
+                self.lopetus()
                 break
 
             if komento == '1':
@@ -73,6 +80,12 @@ class Tiedostonkasittelija:
                 nimet[nimi] = numerot
 
         return nimet
+
+    def talleta(self, luettelo: dict):
+        with open(self.__tiedosto, 'w') as t:
+            for nimi, numerot in luettelo.items():
+                rivi = [nimi] + numerot
+                t.write(';'.join(rivi) + '\n')
 
 
 # testikoodia
