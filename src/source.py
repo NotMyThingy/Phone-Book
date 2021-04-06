@@ -55,8 +55,22 @@ class PuhelinluetteloSovellus:
                 self.haku()
 
 
+class Tiedostonkasittelija:
+    def __init__(self, tiedosto: str) -> None:
+        self.__tiedosto = tiedosto
+
+    def lataa(self):
+        nimet = {}
+        with open(self.__tiedosto) as t:
+            for rivi in t:
+                osat = rivi.strip().split(';')
+                nimi, *numerot = osat
+                nimet[nimi] = numerot
+
+        return nimet
+
 
 # testikoodia
 if __name__ == '__main__':
-    sovellus = PuhelinluetteloSovellus()
-    sovellus.suorita()
+    t = Tiedostonkasittelija("luettelo.txt")
+    print(t.lataa())
