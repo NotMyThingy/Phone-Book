@@ -4,7 +4,6 @@ class Puhelinluettelo:
 
     def lisaa_numero(self, nimi: str, numero: str):
         if nimi not in self.__henkilot:
-            # The person is associated with a list of phone numbers
             self.__henkilot[nimi] = []
 
         self.__henkilot[nimi].append(numero)
@@ -23,6 +22,24 @@ class PuhelinluetteloSovellus:
     def ohje(self):
         print('komennot:')
         print('0 - lopetus')
+        print('1 - lisäys')
+        print('2 - haku')
+
+    # uusien tietojen lisääminen
+    def lisays(self):
+        nimi = input('nimi: ')
+        numero = input('numero: ')
+        self.__luettelo.lisaa_numero(nimi, numero)
+
+    def haku(self):
+        nimi = input('nimi: ')
+        numerot = self.__luettelo.hae_numerot(nimi)
+        if numerot is None:
+            print('numero ei tiedossa')
+            return
+
+        for numero in numerot:
+            print(numero)
 
     def suorita(self):
         self.ohje()
@@ -32,10 +49,14 @@ class PuhelinluetteloSovellus:
             if komento == '0':
                 break
 
+            if komento == '1':
+                self.lisays()
+            elif komento == '2':
+                self.haku()
+
+
 
 # testikoodia
 if __name__ == '__main__':
-    luettelo = Puhelinluettelo()
-    luettelo.lisaa_numero("Erkki", "02-123456")
-    print(luettelo.hae_numerot("Erkki"))
-    print(luettelo.hae_numerot("Emilia"))
+    sovellus = PuhelinluetteloSovellus()
+    sovellus.suorita()
