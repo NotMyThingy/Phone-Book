@@ -47,8 +47,8 @@ class Tiedostonkasittelija:
 
     def talleta(self, luettelo: dict):
         with open(self.__tiedosto, 'w') as t:
-            for nimi, numerot in luettelo.items():
-                rivi = [nimi] + numerot
+            for tiedot in luettelo:
+                rivi = [tiedot.nimi()] + tiedot.numerot() + [tiedot.osoite()]
                 t.write(';'.join(rivi) + '\n')
 
 
@@ -65,9 +65,6 @@ class Henkilo:
         return self.__numerot
 
     def osoite(self):
-        if not self.__osoite:
-            return None
-
         return self.__osoite
 
     def lisaa_numero(self, numero: str):
@@ -138,8 +135,8 @@ class PuhelinluetteloSovellus:
     #     else:
     #         print(nimi)
 
-    #def lopetus(self):
-    #  self.__tiedosto.talleta(self.__luettelo.kaikki_tiedot())
+    def lopetus(self):
+        self.__tiedosto.talleta(self.__luettelo.kaikki_tiedot())
 
     def suorita(self):
         self.ohje()
