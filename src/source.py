@@ -14,9 +14,9 @@ class Puhelinluettelo:
 
         return self.__henkilot[nimi]
 
-    def hae_nimi(self, numero: str):
-        for nimi in self.__henkilot:
-            if numero in self.hae_numerot(nimi):
+    def hae_numerolla(self, numero: str):
+        for nimi, numerot in self.__henkilot.items():
+            if numero in numerot:
                 return nimi
 
         return None
@@ -59,7 +59,7 @@ class PuhelinluetteloSovellus:
 
     def haku_numerolla(self):
         numero = input('numero: ')
-        nimi = self.__luettelo.hae_nimi(numero)
+        nimi = self.__luettelo.hae_numerolla(numero)
         if nimi == None:
             print('tuntematon numero')
         else:
@@ -83,6 +83,8 @@ class PuhelinluetteloSovellus:
                 self.haku()
             elif komento == '3':
                 self.haku_numerolla()
+            else:
+                self.ohje()
 
 
 class Tiedostonkasittelija:
@@ -107,6 +109,5 @@ class Tiedostonkasittelija:
 
 
 # testikoodia
-if __name__ == '__main__':
-    sovellus = PuhelinluetteloSovellus()
-    sovellus.suorita()
+sovellus = PuhelinluetteloSovellus()
+sovellus.suorita()
