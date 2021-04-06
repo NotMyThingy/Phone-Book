@@ -8,6 +8,12 @@ class Puhelinluettelo:
 
         self.__henkilot[nimi].lisaa_numero(numero)
 
+    def lisaa_osoite(self, nimi: str, osoite: str):
+        if nimi not in self.__henkilot:
+            self.__henkilot[nimi] = Henkilo(nimi)
+
+        self.__henkilot[nimi].lisaa_osoite(osoite)
+
     def tiedot(self, nimi: str):
         if nimi not in self.__henkilot:
             return None
@@ -92,15 +98,22 @@ class PuhelinluetteloSovellus:
     def ohje(self):
         print('komennot:')
         print('0 - lopetus')
-        print('1 - lisäys')
-        print('2 - haku')
-        print('3 - haku numeron perusteella')
+        print('1 - nimen lisäys')
+        print('2 - osoiteen lisäys')
+        print('3 - haku')
+        print('4 - haku numeron perusteella')
 
     # uusien tietojen lisääminen
-    def lisays(self):
+    def nimen_lisays(self):
         nimi = input('nimi: ')
         numero = input('numero: ')
         self.__luettelo.lisaa_numero(nimi, numero)
+
+    # osoiteen lisääminen tietoihin
+    def osoiteen_lisays(self):
+        nimi = input('nimi: ')
+        osoite = input('osoite: ')
+        self.__luettelo.lisaa_osoite(nimi, osoite)
 
     def haku(self):
         nimi = input('nimi: ')
@@ -112,6 +125,11 @@ class PuhelinluetteloSovellus:
         for numero in haettu.numerot():
             print(numero)
 
+        if not haettu.osoite():
+            print('osoite ei tiedossa')
+        else:
+            print(haettu.osoite())
+
     # def haku_numerolla(self):
     #     numero = input('numero: ')
     #     nimi = self.__luettelo.hae_numerolla(numero)
@@ -120,8 +138,8 @@ class PuhelinluetteloSovellus:
     #     else:
     #         print(nimi)
 
-    def lopetus(self):
-        self.__tiedosto.talleta(self.__luettelo.kaikki_tiedot())
+    #def lopetus(self):
+    #  self.__tiedosto.talleta(self.__luettelo.kaikki_tiedot())
 
     def suorita(self):
         self.ohje()
@@ -133,10 +151,12 @@ class PuhelinluetteloSovellus:
                 break
 
             if komento == '1':
-                self.lisays()
+                self.nimen_lisays()
             elif komento == '2':
-                self.haku()
+                self.osoiteen_lisays()
             elif komento == '3':
+                self.haku()
+            elif komento == '4':
                 self.haku_numerolla()
             else:
                 self.ohje()
